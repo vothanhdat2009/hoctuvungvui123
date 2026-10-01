@@ -523,6 +523,7 @@ a.btn,a.icon-btn{text-decoration:none}
 <script src="flashcard.js"></script>
 <script src="share.js"></script>
 <script src="minigames.js"></script>
+<script src="wordimg.js"></script>
 <script>
 (function(){
 'use strict';
@@ -654,11 +655,12 @@ function seedWords(){
 }
 function emptyStats(){return{score:0,right:0,wrong:0,sessions:[],days:[]};}
 
+const cleanImg=a=>(typeof a==='string'&&a.length<=70000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(a))?a:'';
 function cleanWord(o,keepId){
   if(!o||typeof o!=='object')return null;
   const vi=str(o.vi,120),en=str(o.en,120);
   if(!vi||!en)return null;
-  return{
+  const out={
     id:(keepId&&typeof o.id==='string'&&o.id)?o.id:uid(),
     vi:vi,en:en,
     def:str(o.def!=null?o.def:o.definition,500),
@@ -666,6 +668,8 @@ function cleanWord(o,keepId){
     learned:o.learned===true||o.learned===1,
     right:num(o.right),wrong:num(o.wrong)
   };
+  const im=cleanImg(o.img);if(im)out.img=im;
+  return out;
 }
 function cleanStats(s){
   s=s&&typeof s==='object'?s:{};
@@ -1068,6 +1072,7 @@ function buildDeck(){
 }
 const fcGet=id=>fc.deck?fc.deck.cards.find(c=>c.id===id):byId(id);
 const fcCur=()=>fc.ids[fc.i]?(fcGet(fc.ids[fc.i])||null):null;
+const flashHooks=[];
 function paintFlash(){
   fc.topic=fillTopicSelect($('#fcTopic'),fc.topic,true);
   $('#fcScope').value=fc.scope;$('#fcDir').value=fc.dir;
@@ -1108,6 +1113,7 @@ function paintFlash(){
     '<button class="btn good" type="button" data-act="fc-yes">'+ic('check')+'Đã thuộc</button>'+
    '</div>'+
    (fc.deck?'':'<p class="center hint" style="margin-top:10px">Trạng thái hiện tại: '+(w.learned?'đã thuộc':'chưa thuộc')+'</p>');
+  flashHooks.forEach(f=>{try{f(w,stage);}catch(e){if(window.console)console.error(e);}});
   if(fc.auto&&!viFront)speak(w.en);
 }
 function flipCard(){
@@ -1651,7 +1657,8 @@ const HTS={
   route:()=>({name:current,arg:routeArg}),
   user:()=>(acct.user&&acct.ready)?acct.user:null,
   acctLoading:()=>!!acct.user&&!acct.ready,
-  sb:()=>acct.sb,enabled:()=>authOn,words:()=>db.words
+  sb:()=>acct.sb,enabled:()=>authOn,words:()=>db.words,
+  save:()=>save(),onFlash:f=>flashHooks.push(f),repaintFlash:()=>{if(current==='flash')paintFlash();}
 };
 (window.HTS_MODULES||[]).forEach(m=>{try{m(HTS);}catch(e){if(window.console)console.error('Module lỗi:',e);}});
 

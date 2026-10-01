@@ -6,7 +6,7 @@ if (!H.words) return;
 const {$, esc, ic, toast, norm, ACT} = H;
 const ROUND = 10, T_MAX = 10000;
 
-H.addIcons({gamepad: 'M6 12h4 M8 10v4 M15 13h.01 M18 11h.01 M17.32 5H6.68a4 4 0 0 0-3.98 3.59C2.6 9.4 2 14.5 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.4-1.4a2 2 0 0 1 1.4-.6h4.4a2 2 0 0 1 1.4.6L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.5-.6-6.6-.7-7.3A4 4 0 0 0 17.3 5z'});
+H.addIcons({play: 'M6 3l14 9-14 9z', gamepad: 'M6 12h4 M8 10v4 M15 13h.01 M18 11h.01 M17.32 5H6.68a4 4 0 0 0-3.98 3.59C2.6 9.4 2 14.5 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.4-1.4a2 2 0 0 1 1.4-.6h4.4a2 2 0 0 1 1.4.6L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.5-.6-6.6-.7-7.3A4 4 0 0 0 17.3 5z'});
 document.head.insertAdjacentHTML('beforeend', '<style>' +
   '.gm-menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}' +
   '.gm-menu .card{display:flex;flex-direction:column;gap:10px}.gm-menu h2{margin:0;font-size:18px}.gm-menu p{margin:0;color:var(--muted);flex:1}' +
